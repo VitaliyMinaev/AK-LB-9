@@ -145,12 +145,8 @@ void Task3() {
 
 // Y = 6 * lg(cos(x))                          ; x = 8 => x += 5(degree) => 7 values of Y
 void Task4() {
-    double x = 8, cosResult = 0, result;
-    const double ONEHUNDREEDEIGHTEEN = 180, PI = 3.14159, SIX = 6, FIVE = 5;
-
-    double first_log;
-    double second_log;
-    double ten = 10.0;
+    double x = 8, cosResult = 0, firstLog, secondLog;
+    const double ONEHUNDREEDEIGHTEEN = 180, PI = 3.14159, SIX = 6, FIVE = 5, TEN = 10;
 
     double results[8];
 
@@ -171,14 +167,16 @@ void Task4() {
 
         fstp cosResult              ; cosResult = cos(x)
 
+        ; lg (cos(x)) =>  operation implementing
+
         fld1                        ; push 1 from the FPU stack
         fld cosResult               ; push result from the FPU stack
         fyl2x                       ; 1 * log2(result)
-        fstp first_log              ; first_log = log2(result)
+        fstp firstLog               ; first_log = log2(result)
 
         FLDL2T                      ; push log2(10) from the FPU stack
 
-        fld first_log               ; push first_log from the FPU stack
+        fld firstLog                ; push first_log from the FPU stack
 
         fdiv st(0), st(1)           ; first_log / log2(10)
 
@@ -213,5 +211,6 @@ int main()
 
     std::cout << std::endl << "Task 4: " << std::endl;
     Task4();
+
     return 0;
 }
