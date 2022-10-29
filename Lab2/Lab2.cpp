@@ -1,7 +1,5 @@
 ﻿#include <iostream>
 
-const double NONE_VALUE = 0000.00001;
-
 // Y = (x - 7) / (x + 20)^ 1/2 = (x - 7) / sqr(x + 20)
 void Task1() {
     double x = 3;           // += 2.5
@@ -49,8 +47,54 @@ void Task1() {
     }
 }
 
+// Y = (2.5 + 3*n) ^ 1/2 = sqr(2.5 + 3 * n)         ; n - ? => Y > 100
+void Task2() {
+    double n = 0, testRes = 0, anotherRes, garbage = 0;
+
+    double resultPerIteration = 0;
+
+    const double THREE = 3, TWOANDHALF = 2.5, ONEHUNDRED = 100, ONE = 1;
+    _asm
+    {
+        finit; inits FPU
+
+    iteration:
+
+        fld n                       ; st(0) = n
+        fmul THREE                  ; st(0) = 3 * n
+        fadd TWOANDHALF             ; st(0) = 2.5 + 3 * n
+        
+        fsqrt                       ; sqr(2.5 + 3 * n)
+
+        fstp testRes
+
+
+
+        fld testRes                 ; push result to the FPU stack
+        fld ONEHUNDRED              ; push ONEHUNDRED to the FPU stack
+        fucomip st(0), st(1)        ; compare 100 > result
+
+        fstp testRes                ; pop result from the FPU stack
+		fstp garbage                ; pop garbage from the FPU stack
+
+        fld n
+        fadd ONE                    ; n += 1
+        fstp n
+
+        jnc iteration               ; hump if CF = 0
+
+        fld n
+        fsub ONE                    ; n += 1
+        fstp n
+    }
+
+    std::cout << "Result: " << testRes << " ; N: " << n << std::endl;
+}
 int main()
 {
+    std::cout << "Task 1: " << std::endl;
     Task1();
+    std::cout << std::endl << "Task 2: " << std::endl;
+    Task2();
     // std::cout << sqroot(42) << std::endl;
 }
