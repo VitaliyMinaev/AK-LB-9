@@ -143,30 +143,6 @@ void Task3() {
         << "Result in degrees: " << resultInDegrees << std::endl;
 }
 
-void Test()
-{
-    double arcCosecValue = 0.5, result;
-
-    _asm
-    {
-        fld arcCosecValue
-        fld st
-        fld st
-        fld1
-        fsubr st(2), st
-        fadd
-        fmul
-        fsqrt
-        fpatan
-
-        ; fpatan; arcSec(1 / arcCosecValue)
-
-        fstp result; result = arcSec(1 / arcCosecValue) = > pop
-    }
-
-    std::cout << "Result: " << result << std::endl;
-}
-
 int main()
 {
     std::cout << "Task 1: " << std::endl;
