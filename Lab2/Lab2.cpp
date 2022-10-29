@@ -143,18 +143,23 @@ void Task3() {
         << "Result in degrees: " << resultInDegrees << std::endl;
 }
 
-// Y = 6 * lg(cos(x))                               ; x = 8 => x += 5(degree) => 7 values of Y
+// Y = 6 * lg(cos(x))                          ; x = 8 => x += 5(degree) => 7 values of Y
 void Task4() {
     double x = 8, cosResult = 0, result;
-    const double ONEHUNDREEDEIGHTEEN = 180, PI = 3.14159, SIX = 6;
+    const double ONEHUNDREEDEIGHTEEN = 180, PI = 3.14159, SIX = 6, FIVE = 5;
 
     double first_log;
     double second_log;
     double ten = 10.0;
 
+    double results[8];
+
     _asm
     {
         finit                       ; inits FPU
+
+        mov ecx, 7
+    iteration:
 
         ; Convert radiant to degree => PI * x / 180
 
@@ -179,10 +184,20 @@ void Task4() {
 
         fmul SIX                    ; 6 * lg(cos(x))
 
-        fstp result
+        fstp results[ecx * 8]
+
+        ; x += 5
+
+        fld x                       
+        fadd FIVE
+        fstp x
+
+        loop iteration
     }
 
-    std::cout << "Result in degrees: " << result << std::endl;
+    for (int i = 7; i >= 1; --i) {
+        std::cout << "Result " << i << ": " << results[i] << std::endl;
+    }
 }
 
 int main()
