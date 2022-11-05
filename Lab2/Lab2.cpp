@@ -22,18 +22,18 @@ void Task1() {
 
     iteration:
         fld x               ; st(0) = x
-        fadd TWENTY         ; st(0) = 23 + x
+        fadd TWENTY         ; st(0) = 20 + x
 
         fsqrt               ; st(0) = sqr(x + 20)
 
         fstp resultSqrt     ; resultSqrt = sqr(x + 20) => pop value
 
         fld x
-        fsub SEVEN
+        fsub SEVEN          ; st(0) = x - 7
 
-        fdiv resultSqrt
+        fdiv resultSqrt     ; st(0) = (x - 7) / sqr(x + 20)
 
-        fstp results[ecx * 8]
+        fstp results[ecx * 8]   ; results[currentIndex] = (x - 7) / sqr(x + 20)
         
         fld x
         fadd TWOANDHALF     ; x += 2.5
@@ -42,14 +42,15 @@ void Task1() {
         loop iteration
     }
 
-    for (int i = 5; i >= 1; --i) {
-        std::cout << "Result " << i << ": " << results[i] << std::endl;
+    double realIterator = 1;
+    for (int i = 5; i >= 1; --i, ++realIterator) {
+        std::cout << "Result " << realIterator << ": " << results[i] << std::endl;
     }
 }
 
 // Y = (2.5 + 3*n) ^ 1/2 = sqr(2.5 + 3 * n)         ; n - ? => Y > 100
 void Task2() {
-    double n = 0, testRes = 0, anotherRes, garbage = 0;
+    double n = 0, result = 0, garbage = 0;
 
     double resultPerIteration = 0;
 
@@ -66,13 +67,13 @@ void Task2() {
         
         fsqrt                       ; sqr(2.5 + 3 * n)
 
-        fstp testRes
+        fstp result
 
-        fld testRes                 ; push result to the FPU stack
+        fld result                  ; push result to the FPU stack
         fld ONEHUNDRED              ; push ONEHUNDRED to the FPU stack
         fucomip st(0), st(1)        ; compare 100 > result
 
-        fstp testRes                ; pop result from the FPU stack
+        fstp result                 ; pop result from the FPU stack
 		fstp garbage                ; pop garbage from the FPU stack
 
         fld n
@@ -82,11 +83,11 @@ void Task2() {
         jnc iteration               ; hump if CF = 0
 
         fld n
-        fsub ONE                    ; n += 1
+        fsub ONE                    ; n -= 1
         fstp n
     }
 
-    std::cout << "Result: " << testRes << " ; N: " << n << std::endl;
+    std::cout << "Result: " << result << " ; N: " << n << std::endl;
 }
 
 // 1/2 * arcCosec(3 * A^2 + 4 * B) => 1/2 * arcsin(1 / (3 * A^2 + 4 * B))
@@ -192,9 +193,9 @@ void Task4() {
 
         loop iteration
     }
-
-    for (int i = 7; i >= 1; --i) {
-        std::cout << "Result " << i << ": " << results[i] << std::endl;
+    double realIterator = 1;
+    for (int i = 7; i >= 1; --i, ++realIterator) {
+        std::cout << "Result " << realIterator << ": " << results[i] << std::endl;
     }
 }
 
